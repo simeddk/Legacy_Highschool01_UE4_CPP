@@ -70,5 +70,6 @@ private:
 
 private:
 	class ACharacter* Attacker;
+	class AActor* Causer;
 	float Damage;
 };

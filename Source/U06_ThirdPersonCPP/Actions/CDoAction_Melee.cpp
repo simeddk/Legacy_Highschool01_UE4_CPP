@@ -63,7 +63,7 @@ void ACDoAction_Melee::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 			return;
 	}
 	HittedCharacters.Add(InOtherCharacter);
-
+	
 
 	//히트 스탑
 	float hitStop = Datas[ComboCount].HitStop;
@@ -91,7 +91,6 @@ void ACDoAction_Melee::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 			controller->PlayerCameraManager->PlayCameraShake(shakeClass);
 	}
 
-
 	//대미지 주기
 	FDamageEvent damageEvent;
 	InOtherCharacter->TakeDamage(Datas[ComboCount].Power, damageEvent, InAttacker->GetController(), InAttackCauser);
@@ -108,3 +107,4 @@ void ACDoAction_Melee::RestoreGlobalTimeDilation()
 {
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.f);
 }
+

@@ -15,7 +15,7 @@ class U06_THIRDPERSONCPP_API ACAttachment : public AActor
 public:	
 	ACAttachment();
 
-	void OnCollision();
+	void OnCollision(FString InCollisionName = "None");
 	void OffCollision();
 
 private:

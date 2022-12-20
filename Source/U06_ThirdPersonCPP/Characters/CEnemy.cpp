@@ -11,6 +11,7 @@
 #include "Widgets/CUserWidget_Name.h"
 #include "Widgets/CUserWidget_Health.h"
 #include "Actions/CActionData.h"
+#include "Actions/CDoAction_MagicBall.h"
 
 ACEnemy::ACEnemy()
 {
@@ -109,7 +110,7 @@ void ACEnemy::RestoreLogoColor()
 float ACEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
+	Causer = DamageCauser;
 	Attacker = Cast<ACharacter>(DamageCauser->GetOwner());
 	Status->DecreaseHealth(Damage);
 
@@ -176,9 +177,15 @@ void ACEnemy::Dead()
 	FVector start = GetActorLocation();
 	FVector target = Attacker->GetActorLocation();
 	FVector direction = target - start;
-	direction.Normalize();
+	direction = direction.GetSafeNormal2D();
 
-	GetMesh()->AddForce(-direction * 2500000);
+	float launchValue = 250000;
+
+	ACDoAction_MagicBall* magicBall = Cast<ACDoAction_MagicBall>(Causer);
+	if (!!magicBall)
+		launchValue = 40000;
+
+	GetMesh()->AddForce(-direction * Damage * launchValue);
 
 	//EndDead
 	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 5.f, false);

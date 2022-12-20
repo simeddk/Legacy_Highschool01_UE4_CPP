@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "Actions/CAttachment.h"
 #include "Actions/CActionData.h"
+#include "Actions/CDoAction_Melee.h"
 #include "Components/CActionComponent.h"
 
 FString UCAnimNotifyState_Collision::GetNotifyName_Implementation() const
@@ -18,7 +19,14 @@ void UCAnimNotifyState_Collision::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	UCActionComponent* actionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(actionComp);
 
-	actionComp->GetCurrent()->GetAttachment()->OnCollision();
+	ACDoAction_Melee* melee =  Cast<ACDoAction_Melee>(actionComp->GetCurrent()->GetDoAction());
+	if (!!melee)
+	{
+		FString collisionName = melee->GetCollisionName();
+		actionComp->GetCurrent()->GetAttachment()->OnCollision(collisionName);
+	}
+	else
+		actionComp->GetCurrent()->GetAttachment()->OnCollision();
 }
 
 void UCAnimNotifyState_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)

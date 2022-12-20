@@ -60,6 +60,7 @@ void ACAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompon
 		CheckNull(character);
 
 		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, character);
+		OffCollision();
 	}
 }
 
@@ -74,10 +75,18 @@ void ACAttachment::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponen
 	}
 }
 
-void ACAttachment::OnCollision()
+void ACAttachment::OnCollision(FString InCollisionName)
 {
 	for (UShapeComponent* shape : ShapeComponents)
-		shape->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	{
+		if (GetName().Contains("Fist"))
+		{
+			if (shape->GetName() == InCollisionName)
+				shape->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		}
+		else
+			shape->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
 }
 
 void ACAttachment::OffCollision()

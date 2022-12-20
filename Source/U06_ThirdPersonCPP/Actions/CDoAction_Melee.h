@@ -12,6 +12,7 @@ class U06_THIRDPERSONCPP_API ACDoAction_Melee : public ACDoAction
 public:
 	FORCEINLINE void EnableCombo() { bCanCombo = true; }
 	FORCEINLINE void DisableCombo() { bCanCombo = false; }
+	FORCEINLINE const FString& GetCollisionName() { return Datas[ComboCount].CollisionName; }
 	
 public:
 	virtual void DoAction() override;
