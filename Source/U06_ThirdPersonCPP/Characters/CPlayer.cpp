@@ -9,6 +9,8 @@
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Components/CapsuleComponent.h"
+#include "Widgets/CUserWidget_SelectAction.h"
+#include "Widgets/CUserWidget_ActionIcon.h"
 
 ACPlayer::ACPlayer()
 {
@@ -50,6 +52,10 @@ ACPlayer::ACPlayer()
 	GetCharacterMovement()->MaxWalkSpeed = Status->GetRunSpeed();
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
+	//Get WidgetClassRef
+	CHelpers::GetClass<UCUserWidget_SelectAction>(&SelectActionWdigetClass, "WidgetBlueprint'/Game/Widgets/WB_SelectAction.WB_SelectAction_C'");
+
 }
 
 void ACPlayer::BeginPlay()
@@ -66,6 +72,9 @@ void ACPlayer::BeginPlay()
 	GetMesh()->SetMaterial(1, LogoMaterial);
 
 	State->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
+
+	SelectActionWdiget = CreateWidget<UCUserWidget_SelectAction, APlayerController>(GetController<APlayerController>(), SelectActionWdigetClass);
+	SelectActionWdiget->AddToViewport();
 
 	Super::BeginPlay();
 

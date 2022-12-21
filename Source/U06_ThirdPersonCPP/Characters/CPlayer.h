@@ -21,6 +21,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "TeamID")
 		uint8 TeamID = 0;
 
+	UPROPERTY(EditAnywhere, Category = "Widget")
+		TSubclassOf<class UCUserWidget_SelectAction> SelectActionWdigetClass;
+
 private: //Scene Component
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* SpringArm;
@@ -101,4 +104,8 @@ private:
 	class UMaterialInstanceDynamic* LogoMaterial;
 
 	class ACharacter* Attacker;
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+		class UCUserWidget_SelectAction* SelectActionWdiget;
 };
