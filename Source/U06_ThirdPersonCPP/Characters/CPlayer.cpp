@@ -73,8 +73,8 @@ void ACPlayer::BeginPlay()
 
 	State->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
 
-	SelectActionWdiget = CreateWidget<UCUserWidget_SelectAction, APlayerController>(GetController<APlayerController>(), SelectActionWdigetClass);
-	SelectActionWdiget->AddToViewport();
+	SelectActionWidget = CreateWidget<UCUserWidget_SelectAction, APlayerController>(GetController<APlayerController>(), SelectActionWdigetClass);
+	SelectActionWidget->AddToViewport();
 
 	Super::BeginPlay();
 

@@ -15,6 +15,8 @@ class U06_THIRDPERSONCPP_API ACPlayer : public ACharacter, public IICharacter, p
 public:
 	ACPlayer();
 
+	FORCEINLINE class UCUserWidget_SelectAction* GetSelectActionWidget() { return SelectActionWidget; }
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
@@ -107,5 +109,5 @@ private:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-		class UCUserWidget_SelectAction* SelectActionWdiget;
+		class UCUserWidget_SelectAction* SelectActionWidget;
 };
