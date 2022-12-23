@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -10,6 +8,9 @@ UCLASS()
 class U06_THIRDPERSONCPP_API UCUserWidget_SelectAction : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	FORCEINLINE class UCUserWidget_ActionIcon* GetItem(FString InNames) { return Items[InNames]; }
 
 public:
 	void Pressed(FString InName);

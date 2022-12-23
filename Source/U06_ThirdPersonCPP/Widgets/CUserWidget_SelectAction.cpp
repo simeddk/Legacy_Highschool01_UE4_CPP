@@ -15,7 +15,15 @@ void UCUserWidget_SelectAction::NativeConstruct()
 
 void UCUserWidget_SelectAction::Pressed(FString InName)
 {
-	
+	if (Items[InName]->OnItemPressed.IsBound())
+		Items[InName]->OnItemPressed.Broadcast();
+
+	SetVisibility(ESlateVisibility::Hidden);
+
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = false;
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetInputMode(FInputModeGameOnly());
+
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.f);
 }
 
 void UCUserWidget_SelectAction::Hover(FString InName)
