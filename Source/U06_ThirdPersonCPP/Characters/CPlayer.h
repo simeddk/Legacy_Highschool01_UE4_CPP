@@ -77,7 +77,7 @@ private: //ActionEvent
 	UFUNCTION() void OnTwoHand();
 	UFUNCTION() void OnMagicBall();
 	UFUNCTION() void OnWarp();
-	UFUNCTION() void OnMagicStrom();
+	UFUNCTION() void OnMagicStorm();
 
 	void OnDoAction();
 

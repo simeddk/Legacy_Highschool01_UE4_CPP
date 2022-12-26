@@ -82,7 +82,7 @@ void ACPlayer::BeginPlay()
 	SelectActionWidget->GetItem("Item3")->OnItemPressed.AddDynamic(this, &ACPlayer::OnTwoHand);
 	SelectActionWidget->GetItem("Item4")->OnItemPressed.AddDynamic(this, &ACPlayer::OnMagicBall);
 	SelectActionWidget->GetItem("Item5")->OnItemPressed.AddDynamic(this, &ACPlayer::OnWarp);
-	SelectActionWidget->GetItem("Item6")->OnItemPressed.AddDynamic(this, &ACPlayer::OnMagicStrom);
+	SelectActionWidget->GetItem("Item6")->OnItemPressed.AddDynamic(this, &ACPlayer::OnMagicStorm);
 
 	Super::BeginPlay();
 
@@ -114,6 +114,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("TwoHand", EInputEvent::IE_Pressed, this, &ACPlayer::OnTwoHand);
 	PlayerInputComponent->BindAction("MagicBall", EInputEvent::IE_Pressed, this, &ACPlayer::OnMagicBall);
 	PlayerInputComponent->BindAction("Warp", EInputEvent::IE_Pressed, this, &ACPlayer::OnWarp);
+	PlayerInputComponent->BindAction("MagicStorm", EInputEvent::IE_Pressed, this, &ACPlayer::OnMagicStorm);
 
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, this, &ACPlayer::OnDoAction);
 
@@ -311,9 +312,11 @@ void ACPlayer::OnWarp()
 	Action->SetWarpMode();
 }
 
-UFUNCTION() void ACPlayer::OnMagicStrom()
+UFUNCTION() void ACPlayer::OnMagicStorm()
 {
-	CLog::Print("MagicStrom!!!");
+	CheckFalse(State->IsIdleMode());
+
+	Action->SetMagicStormMode();
 }
 
 void ACPlayer::OnMagicBall()
