@@ -60,7 +60,9 @@ void ACAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompon
 		CheckNull(character);
 
 		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, character);
-		OffCollision();
+		
+		if (GetName().Contains("Storm") == false)
+			OffCollision();
 	}
 }
 

@@ -20,6 +20,7 @@ void ACDoAction_MagicStorm::BeginPlay()
 			break;
 		}
 	}
+
 }
 
 void ACDoAction_MagicStorm::DoAction()
@@ -60,14 +61,26 @@ void ACDoAction_MagicStorm::End_DoAction()
 
 void ACDoAction_MagicStorm::Abort()
 {
+	Finish();
 }
 
 void ACDoAction_MagicStorm::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Todo. ¿©±â
-	Box->SetWorldLocation(OwnerCharacter->GetActorLocation());
+	FVector center = OwnerCharacter->GetActorLocation();
+
+	Angle += Speed * DeltaTime;
+
+	if (FMath::IsNearlyEqual(Angle, 360.f))
+		Angle = 0.f;
+
+	FVector awayFrom = FVector(Distance, 0, 0);
+	FVector rotation = awayFrom.RotateAngleAxis(Angle, FVector::UpVector);
+
+	center += rotation;
+
+	Box->SetWorldLocation(center);
 }
 
 void ACDoAction_MagicStorm::Hitted()
@@ -76,15 +89,14 @@ void ACDoAction_MagicStorm::Hitted()
 
 	for (ACharacter* character : HittedCharacters)
 	{
+		if (character == nullptr)
+			break;
+
 		ACEnemy* enemy = Cast<ACEnemy>(character);
-		UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(enemy);
+		if (enemy == nullptr)
+			break;
 		
-		if (!!enemy &&
-			enemy->IsPendingKill() == false &&
-			state->IsDeadMode() == false)
-		{
-			enemy->TakeDamage(Datas[0].Power, e, OwnerCharacter->GetController(), this);
-		}
+		enemy->TakeDamage(Datas[0].Power, e, OwnerCharacter->GetController(), this);
 	}
 }
 
