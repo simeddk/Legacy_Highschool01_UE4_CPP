@@ -26,13 +26,20 @@ void ACCameraChange::BeginPlay()
 
 void ACCameraChange::Change()
 {
-	APlayerCameraManager* cameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	/*APlayerCameraManager* cameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CheckNull(cameraManager);
 
 	Index++;
 	Index %= Cameras.Num();
 
-	cameraManager->SetViewTarget(Cameras[Index]);
+	cameraManager->SetViewTarget(Cameras[Index]);*/
 	
+	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (Cameras.Num() < 1) return;
+
+	controller->SetViewTargetWithBlend(Cameras[Index], 2.f, EViewTargetBlendFunction::VTBlend_EaseIn, 2.f);
+
+	Index++;
+	Index %= Cameras.Num();
 }
 
