@@ -123,6 +123,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("SelectAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnSelectAction);
 	PlayerInputComponent->BindAction("SelectAction", EInputEvent::IE_Released, this, &ACPlayer::OffSelectAction);
+
+	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ACPlayer::OnInteract);
 }
 
 FGenericTeamId ACPlayer::GetGenericTeamId() const
@@ -360,6 +362,12 @@ void ACPlayer::OffSelectAction()
 	GetController<APlayerController>()->SetInputMode(FInputModeGameOnly());
 
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.f);
+}
+
+void ACPlayer::OnInteract()
+{
+	if (OnInteractEvent.IsBound())
+		OnInteractEvent.Broadcast();
 }
 
 void ACPlayer::ChangeBodyColor(FLinearColor InColor)

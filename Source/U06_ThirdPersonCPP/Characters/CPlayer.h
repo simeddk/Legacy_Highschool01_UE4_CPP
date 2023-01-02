@@ -7,6 +7,8 @@
 #include "GenericTeamAgentInterface.h"
 #include "CPlayer.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractEvent);
+
 UCLASS()
 class U06_THIRDPERSONCPP_API ACPlayer : public ACharacter, public IICharacter, public IGenericTeamAgentInterface
 {
@@ -87,6 +89,8 @@ private: //ActionEvent
 	void OnSelectAction();
 	void OffSelectAction();
 
+	void OnInteract();
+
 private:
 	void Begin_Roll();
 	void Begin_BackStep();
@@ -114,4 +118,9 @@ private:
 protected:
 	UPROPERTY(BlueprintReadOnly)
 		class UCUserWidget_SelectAction* SelectActionWidget;
+
+public:
+	UPROPERTY(BlueprintAssignable)
+		FInteractEvent OnInteractEvent;
+
 };
