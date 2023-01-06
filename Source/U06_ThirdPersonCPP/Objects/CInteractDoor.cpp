@@ -59,7 +59,8 @@ void ACInteractDoor::Interact()
 	UCameraComponent* camera = CHelpers::GetComponent<UCameraComponent>(Player);
 
 	float dot = GetActorForwardVector() | camera->GetForwardVector();
-	DottedDegree = FMath::Sign(dot) * MaxDegree;
+	Direction = FMath::Sign(dot);
+	DottedDegree = Direction * MaxDegree;
 
 	if (bClosed)
 	{
@@ -77,17 +78,32 @@ void ACInteractDoor::Interact()
 
 void ACInteractDoor::Opening(float DeltaTime)
 {
-	CurrentDegree = DottedDegree * Speed * DeltaTime;
+	CurrentDegree = Direction * Speed * DeltaTime;
 
-	if (bOpening)
+	if (FMath::IsNearlyEqual(Door->GetRelativeRotation().Yaw, DottedDegree, 2.f))
 	{
-		//Todo. DoorÀÇ YawÈ¸Àü
-		//Door->AddRelativeRoation();
+		bOpening = false;
+		Door->SetRelativeRotation(FRotator(0, DottedDegree, 0));
+	}
+	else if (bOpening)
+	{
+		Door->AddRelativeRotation(FRotator(0, CurrentDegree, 0));
 	}
 }
 
 void ACInteractDoor::Closing(float DeltaTime)
 {
+	CurrentDegree =  (Door->GetRelativeRotation().Yaw > 0.f  ? -Speed : Speed) * DeltaTime;
+
+	if (FMath::IsNearlyZero(Door->GetRelativeRotation().Yaw, 2.f))
+	{
+		bClosing = false;
+		Door->SetRelativeRotation(FRotator::ZeroRotator);
+	}
+	else if (bClosing)
+	{
+		Door->AddRelativeRotation(FRotator(0, CurrentDegree, 0));
+	}
 }
 
 void ACInteractDoor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
