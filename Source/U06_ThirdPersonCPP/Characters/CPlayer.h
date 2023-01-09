@@ -51,6 +51,9 @@ private: //Actor Component
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCActionComponent* Action;
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCFeetComponent* Feet;
+
 protected:
 	virtual void BeginPlay() override;
 
