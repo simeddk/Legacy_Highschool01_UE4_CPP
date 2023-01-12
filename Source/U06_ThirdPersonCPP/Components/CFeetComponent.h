@@ -44,7 +44,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	void Trace(FName InSocketName, float& OutDistance);
+	void Trace(FName InSocketName, float& OutDistance, FRotator& OutRotator);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IK")
@@ -58,6 +58,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IK")
 		TEnumAsByte<EDrawDebugTrace::Type> DrawDebugType = EDrawDebugTrace::ForOneFrame;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IK")
+		float FootOffset = 5.f;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IK")
+		float InterpSpeed = 20.f;
 
 private:
 	FFeetData Data;

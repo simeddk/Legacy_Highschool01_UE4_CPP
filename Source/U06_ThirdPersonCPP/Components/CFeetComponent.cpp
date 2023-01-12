@@ -23,13 +23,25 @@ void UCFeetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	float leftDistance;
-	Trace(LeftSocket, leftDistance);
+	FRotator leftRotator;
+	Trace(LeftSocket, leftDistance, leftRotator);
 
 	float rightDistance;
-	Trace(RightSocket, rightDistance);
+	FRotator rightRotator;
+	Trace(RightSocket, rightDistance, rightRotator);
+
+	float shouldBeDown = FMath::Min(leftDistance, rightDistance);
+
+	Data.PelvisDistance.Z = UKismetMathLibrary::FInterpTo(Data.PelvisDistance.Z, shouldBeDown, DeltaTime, InterpSpeed);
+
+	Data.LeftDistance.X = UKismetMathLibrary::FInterpTo(Data.LeftDistance.X, (leftDistance - shouldBeDown), DeltaTime, InterpSpeed);
+	Data.RightDistance.X = UKismetMathLibrary::FInterpTo(Data.RightDistance.X, -(rightDistance - shouldBeDown), DeltaTime, InterpSpeed);
+
+	Data.LeftRotator = UKismetMathLibrary::RInterpTo(Data.LeftRotator, leftRotator, DeltaTime, InterpSpeed);
+	Data.RightRotator = UKismetMathLibrary::RInterpTo(Data.RightRotator, rightRotator, DeltaTime, InterpSpeed);
 }
 
-void UCFeetComponent::Trace(FName InSocketName, float& OutDistance)
+void UCFeetComponent::Trace(FName InSocketName, float& OutDistance, FRotator& OutRotator)
 {
 	OutDistance = 0.f;
 
@@ -59,6 +71,20 @@ void UCFeetComponent::Trace(FName InSocketName, float& OutDistance)
 	);
 
 	CheckFalse(hitResult.IsValidBlockingHit());
+
+	float depthUnderGround = (hitResult.ImpactPoint - hitResult.TraceEnd).Size();
+	OutDistance = FootOffset + depthUnderGround - AdditionalDistance;
+
+	FVector normal = hitResult.ImpactNormal;
+	UKismetSystemLibrary::DrawDebugArrow(GetWorld(), hitResult.ImpactPoint, hitResult.ImpactPoint + normal * 100, 10, FLinearColor::Blue);
+
+	float roll = UKismetMathLibrary::DegAtan2(normal.Y, normal.Z);
+	float pitch = -UKismetMathLibrary::DegAtan2(normal.X, normal.Z);
+
+	roll = FMath::Clamp(roll, -15.f, 15.f);
+	pitch = FMath::Clamp(pitch, -30.f, 30.f);
+
+	OutRotator = FRotator(pitch, 0.f, roll);
 
 }
 
