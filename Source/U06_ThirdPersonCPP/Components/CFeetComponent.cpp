@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
+#include "Engine/TriggerVolume.h"
 
 UCFeetComponent::UCFeetComponent()
 {
@@ -16,6 +17,16 @@ void UCFeetComponent::BeginPlay()
 	
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	CapsuleHalfHeight = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATriggerVolume::StaticClass(), actors);
+	CheckFalse(actors.Num() > 0);
+
+	for (AActor* triggerVolume : actors)
+	{
+		triggerVolume->OnActorBeginOverlap.AddDynamic(this, &UCFeetComponent::OnActorBeginOverlap);
+		triggerVolume->OnActorEndOverlap.AddDynamic(this, &UCFeetComponent::OnActorEndOverlap);
+	}
 }
 
 void UCFeetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -86,5 +97,17 @@ void UCFeetComponent::Trace(FName InSocketName, float& OutDistance, FRotator& Ou
 
 	OutRotator = FRotator(pitch, 0.f, roll);
 
+}
+
+void UCFeetComponent::OnActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	CheckNull(Cast<ACharacter>(OtherActor));
+	bIKMode = true;
+}
+
+void UCFeetComponent::OnActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	CheckNull(Cast<ACharacter>(OtherActor));
+	bIKMode = false;
 }
 

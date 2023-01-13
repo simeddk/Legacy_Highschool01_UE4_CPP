@@ -5,6 +5,8 @@
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 #include "Components/CStatusComponent.h"
+#include "ProceduralMeshComponent.h"
+#include "KismetProceduralMeshLibrary.h"
 
 
 void ACDoAction_MagicBall::BeginPlay()
@@ -75,6 +77,21 @@ void ACDoAction_MagicBall::OffAim()
 
 void ACDoAction_MagicBall::OnThrowBeginOverlap(FHitResult InHitResult)
 {
+	UProceduralMeshComponent* otherComp = Cast<UProceduralMeshComponent>(InHitResult.GetComponent());
+
+	if (!!otherComp)
+	{
+		// Todo
+		/*UKismetProceduralMeshLibrary::SliceProceduralMesh
+		(
+			otherComp,
+			InHitResult.ImpactPoint,
+			FVector(GetActorUpVector()),
+			true,
+		);*/
+	}
+
+
 	FDamageEvent e;
 	InHitResult.GetActor()->TakeDamage(Datas[0].Power, e, OwnerCharacter->GetController(), this);
 }

@@ -27,7 +27,10 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	UCFeetComponent* feet = CHelpers::GetComponent<UCFeetComponent>(owner);
 	if (!!feet)
+	{
 		FeetData = feet->GetData();
+		IkMode = feet->IsIKMode();
+	}
 }
 
 void UCAnimInstance::OnActionTypeChanged(EActionType InPrevType, EActionType InNewType)

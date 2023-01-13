@@ -36,6 +36,7 @@ public:
 	UCFeetComponent();
 	
 	FORCEINLINE FFeetData GetData() { return Data; }
+	FORCEINLINE bool IsIKMode() { return bIKMode; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -45,6 +46,12 @@ public:
 
 private:
 	void Trace(FName InSocketName, float& OutDistance, FRotator& OutRotator);
+
+	UFUNCTION()
+		void OnActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
+	UFUNCTION()
+		void OnActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IK")
@@ -70,4 +77,6 @@ private:
 
 	class ACharacter* OwnerCharacter;
 	float CapsuleHalfHeight;
+
+	bool bIKMode;
 };

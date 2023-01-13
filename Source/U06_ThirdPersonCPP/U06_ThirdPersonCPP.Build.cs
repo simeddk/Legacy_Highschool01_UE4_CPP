@@ -13,7 +13,8 @@ public class U06_ThirdPersonCPP : ModuleRules
 			"Engine",
 			"InputCore",
 			"AIModule",
-			"GameplayTasks"
+			"GameplayTasks",
+			"ProceduralMeshComponent"
 		});
 
 		//PrivateDependencyModuleNames.AddRange(new string[] { "./" });
