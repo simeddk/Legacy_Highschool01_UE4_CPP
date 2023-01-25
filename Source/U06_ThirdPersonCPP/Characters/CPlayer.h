@@ -35,6 +35,9 @@ private: //Scene Component
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCameraComponent* Camera;
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UPostProcessComponent* PostProcess;
+
 private: //Actor Component
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStatusComponent* Status;
@@ -99,6 +102,10 @@ private:
 	void Begin_BackStep();
 
 	void Hitted();
+
+	UFUNCTION()
+		void End_Hitted();
+
 	void Dead();
 
 	UFUNCTION()

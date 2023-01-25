@@ -7,6 +7,7 @@
 #include "Components/CStatusComponent.h"
 #include "ProceduralMeshComponent.h"
 #include "KismetProceduralMeshLibrary.h"
+#include "Materials/MaterialInstanceConstant.h"
 
 
 void ACDoAction_MagicBall::BeginPlay()
@@ -78,17 +79,27 @@ void ACDoAction_MagicBall::OffAim()
 void ACDoAction_MagicBall::OnThrowBeginOverlap(FHitResult InHitResult)
 {
 	UProceduralMeshComponent* otherComp = Cast<UProceduralMeshComponent>(InHitResult.GetComponent());
+	UProceduralMeshComponent* outProcMesh = nullptr;
+
+	UMaterialInstanceConstant* material;
+	CHelpers::GetAssetDynamic<UMaterialInstanceConstant>(&material, "MaterialInstanceConstant'/Game/Materials/MAT_Red_Inst.MAT_Red_Inst'");
+
 
 	if (!!otherComp)
 	{
-		// Todo
-		/*UKismetProceduralMeshLibrary::SliceProceduralMesh
+		UKismetProceduralMeshLibrary::SliceProceduralMesh
 		(
 			otherComp,
 			InHitResult.ImpactPoint,
-			FVector(GetActorUpVector()),
+			UKismetMathLibrary::RandomUnitVector(),
 			true,
-		);*/
+			outProcMesh,
+			EProcMeshSliceCapOption::CreateNewSectionForCap,
+			material
+		);
+
+		outProcMesh->SetSimulatePhysics(true);
+		outProcMesh->AddImpulse(InHitResult.ImpactNormal * 1000.f, NAME_None, true);
 	}
 
 

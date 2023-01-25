@@ -10,6 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/PostProcessComponent.h"
 #include "Widgets/CUserWidget_SelectAction.h"
 #include "Widgets/CUserWidget_ActionIcon.h"
 
@@ -20,6 +21,7 @@ ACPlayer::ACPlayer()
 	//Create SceneComponent
 	CHelpers::CreateComponent(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent(this, &Camera, "Camera", SpringArm);
+	CHelpers::CreateComponent(this, &PostProcess, "PostProcess", GetRootComponent());
 
 	//Create ActorComponent
 	CHelpers::CreateActorComponent(this, &Action, "Action");
@@ -58,7 +60,18 @@ ACPlayer::ACPlayer()
 	//Get WidgetClassRef
 	CHelpers::GetClass<UCUserWidget_SelectAction>(&SelectActionWdigetClass, "WidgetBlueprint'/Game/Widgets/WB_SelectAction.WB_SelectAction_C'");
 
+	//PostProcess Settings
+	UTexture* dirtTexture;
+	CHelpers::GetAsset<UTexture>(&dirtTexture, "Texture2D'/Game/Textures/SkillIcon/T_BloodFog.T_BloodFog'");
+
+	PostProcess->Settings.BloomDirtMask = dirtTexture;
+	PostProcess->bEnabled = true;
+	PostProcess->Settings.bOverride_BloomDirtMask = false;
+	PostProcess->Settings.bOverride_BloomDirtMaskIntensity = false;
+	PostProcess->Settings.BloomDirtMaskIntensity = 50.f;
+	PostProcess->Settings.BloomDirtMaskTint = FLinearColor::Red;
 }
+
 
 void ACPlayer::BeginPlay()
 {
@@ -221,8 +234,18 @@ void ACPlayer::Begin_BackStep()
 
 void ACPlayer::Hitted()
 {
+	PostProcess->Settings.bOverride_BloomDirtMask = true;
+	PostProcess->Settings.bOverride_BloomDirtMaskIntensity = true;
+	UKismetSystemLibrary::K2_SetTimer(this, "End_Hitted", 0.2f, false);
+
 	Montages->PlayHitted();
 	Status->SetMove();
+}
+
+void ACPlayer::End_Hitted()
+{
+	PostProcess->Settings.bOverride_BloomDirtMask = false;
+	PostProcess->Settings.bOverride_BloomDirtMaskIntensity = false;
 }
 
 void ACPlayer::Dead()
